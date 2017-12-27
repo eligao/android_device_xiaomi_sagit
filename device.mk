@@ -374,6 +374,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.vr@1.0-service.sagit
 
+# Weaver
+PRODUCT_PACKAGES += \
+    android.hardware.weaver@1.0
+
 # VNDK-SP:
 PRODUCT_PACKAGES += \
     vndk-sp
