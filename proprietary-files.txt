@@ -192,6 +192,8 @@ vendor/lib/libsac.so
 vendor/lib/libarcsoft_dualcam_optical_zoom_control.so
 vendor/lib/libarcsoft_dualcam_refocus.so
 vendor/lib/libarcsoft_dualcam_optical_zoom.so
+vendor/bin/hw/android.hardware.camera.provider@2.4-service
+vendor/etc/init/android.hardware.camera.provider@2.4-service.rc
 
 # Camera actuator
 vendor/lib/libactuator_centaur_imx386_ak7371_primax.so
