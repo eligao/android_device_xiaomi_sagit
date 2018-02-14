@@ -1,5 +1,15 @@
 # Sagit related stuff
 
+on early-init
+    mkdir /persist/wlan_bt 0700 system system
+
+    mkdir /persist/audio 0755 system system
+    mkdir /persist/subsys 0700 system system
+    chmod 644 /persist/audio/us_manual_cal
+    chown system system /dev/tiload_node
+    chmod 660 /dev/tiload_node
+
+
 on init
     export LD_SHIM_LIBS /system/lib/libMiCameraHal.so|libshim_MiCamera.so
     # Goodix fingerprint
@@ -16,6 +26,27 @@ on post-fs-data
     mkdir /data/misc/goodix 0770 system system
     mkdir /persist/fpc 0770 system system
 
+    mkdir /data/nfc 0770 nfc nfc
+    mkdir /data/thermal 0771 system system
+    mkdir /data/thermal/config 0771 system system
+    chown system system /dev/sysmatdrv
+    chmod 0660 /dev/sysmatdrv
+#QDCM config file for sagit
+    copy /system/etc/calib.cfg /data/vendor/display/calib.cfg
+    copy /system/etc/qdcm_calib_data_jdi_fhd_cmd_incell_dsi_panel.xml /data/vendor/display/qdcm_calib_data_jdi_fhd_cmd_incell_dsi_panel.xml
+    copy /system/etc/qdcm_calib_data_lgd_fhd_cmd_incell_dsi_panel.xml /data/vendor/display/qdcm_calib_data_lgd_fhd_cmd_incell_dsi_panel.xml
+    copy /system/etc/jdi_fhd_cmd_incell_dsi_panel_ct.xml /data/vendor/display/jdi_fhd_cmd_incell_dsi_panel_ct.xml
+    chmod 0644 /data/vendor/display/calib.cfg
+    chmod 0644 /data/vendor/display/qdcm_calib_data_jdi_fhd_cmd_incell_dsi_panel.xml
+    chmod 0644 /data/vendor/display/qdcm_calib_data_lgd_fhd_cmd_incell_dsi_panel.xml
+    chmod 0644 /data/vendor/display/jdi_fhd_cmd_incell_dsi_panel_ct.xml
+#QDCM config file for chiron
+    copy /system/etc/jdi_fhd_video_dsi_panel_ct.xml /data/vendor/display/jdi_fhd_video_dsi_panel_ct.xml
+    copy /system/etc/qdcm_calib_data_jdi_fhd_video_dsi_panel.xml /data/vendor/display/qdcm_calib_data_jdi_fhd_video_dsi_panel.xml
+    chmod 0644 /data/vendor/display/jdi_fhd_video_dsi_panel_ct.xml
+    chmod 0644 /data/vendor/display/qdcm_calib_data_jdi_fhd_video_dsi_panel.xml
+
+
 on boot
    chown system system /sys/bus/platform/devices/soc:fingerprint_fpc/irq
    chown system system /sys/bus/platform/devices/soc:fingerprint_fpc/irq_enable
@@ -31,6 +62,9 @@ on boot
    chmod 0700 /sys/bus/platform/devices/soc:fingerprint_fpc/device_prepare
    chmod 0700 /sys/bus/platform/devices/soc:fingerprint_fpc/vendor
    chmod 0600 /data/misc/fpc/calibration_image.pndat
+    chown system system /sys/class/leds/led:torch_0/brightness
+    chown system system /sys/class/leds/led:torch_1/brightness
+    chown system system /sys/class/leds/led:switch_0/brightness
 
     # RGB lights
     chown system system /sys/class/leds/white/brightness
@@ -75,6 +109,20 @@ on boot
     chown wifi wifi /sys/module/wlan/parameters/fwpath
     chown wifi wifi /sys/kernel/boot_wlan/boot_wlan
 
+    setprop persist.camera.stats.test 5
+
+    # access permission for Speaker SmartPA
+    chmod 0666 /dev/i2c-10
+    chmod 0777 /dev/elliptic0
+    chmod 0777 /dev/elliptic1
+
+on property:ro.boot.audio=chiron-s
+    export ADSP_LIBRARY_PATH "/system/vendor/lib/rfsa/adsp/chiron-s;/system/lib/rfsa/adsp;/system/vendor/lib/rfsa/adsp;/dsp"
+
+    chmod 0660 /dev/pn553
+    chown nfc nfc /dev/pn553
+
+
 on property:ro.boot.fingerprint=fpc
     setprop ro.hardware.fingerprint fpc
  
@@ -108,3 +156,6 @@ service readmac /system/vendor/bin/readmac
     user root
     group root oem_2950
     oneshot
+
+on property:persist.download_mode=1
+   write /sys/module/msm_poweroff/parameters/download_mode 1
