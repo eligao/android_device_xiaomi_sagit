@@ -842,7 +842,6 @@ vendor/lib/libcsm_data.so
 vendor/firmware/libpn553_fw.so
 
 # Perf
-vendor/etc/perf/perfboostsconfig.xml
 vendor/etc/perf/perf-profile0.conf
 vendor/etc/perf/perf-profile1.conf
 vendor/etc/perf/perf-profile2.conf
